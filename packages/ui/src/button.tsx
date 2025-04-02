@@ -1,55 +1,28 @@
-import React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import { ButtonHTMLAttributes, ReactNode } from "react"
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 
-const button = cva("button", {
-  variants: {
-    intent: {
-      primary: ["bg-blue-500", "text-white", "border-transparent"],
-      secondary: ["bg-white", "text-gray-800", "border-gray-400"],
-    },
-    size: {
-      small: ["text-sm", "py-1", "px-2"],
-      medium: ["text-base", "py-2", "px-4"],
-    },
-    disabled: {
-      false: null,
-      true: ["opacity-50", "cursor-not-allowed"],
-    },
-  },
-  compoundVariants: [
-    {
-      intent: "primary",
-      disabled: false,
-      class: "hover:bg-blue-600",
-    },
-    {
-      intent: "secondary",
-      disabled: false,
-      class: "hover:bg-gray-100",
-    },
-    { intent: "primary", size: "medium", class: "uppercase" },
-  ],
-  defaultVariants: {
-    disabled: false,
-    intent: "primary",
-    size: "medium",
-  },
-});
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+children:ReactNode;
 
-export interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">,
-    VariantProps<typeof button> {}
+}
 
-export const Button: React.FC<ButtonProps> = ({
-  className,
-  intent,
-  size,
-  disabled,
-  ...props
-}) => (
-  <button
-    className={button({ intent, size, disabled, className })}
-    disabled={disabled || undefined}
-    {...props}
-  />
-);
+export const Button = ({children, ...props}:ButtonProps)=>{
+return(
+    <button className={twMerge(clsx(buttonVariants({size:"lg",type:"primary"})))}{...props}>{children}</button>
+)
+}
+
+const buttonVariants = cva("ui-rounded-full",{
+variants:{
+ type:{
+   "primary":"ui-border-2 ui-border-black ui-bg-slate-600 ui-text-white",
+   "secondary":"ui-border-2 ui-border-black ui-bg-white ui-text-green"
+ }  ,
+ size:{
+   "sm":"ui-p-4",
+   "lg":"ui-p-8"
+ } 
+}
+})
